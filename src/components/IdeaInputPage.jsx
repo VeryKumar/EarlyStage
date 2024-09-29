@@ -10,6 +10,7 @@ function IdeaInputPage({ onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
+    console.log(ideaDescription, appName, category)
     try {
       const response = await fetch('http://localhost:8000/analyze-idea', {
         method: 'POST',
@@ -32,7 +33,29 @@ function IdeaInputPage({ onSubmit }) {
     <div className="idea-input-page">
       <h2>Describe Your App Idea</h2>
       <form onSubmit={handleSubmit}>
-        {/* ... existing form fields ... */}
+      <label htmlFor="appName">App Name:</label>
+        <input
+          id="appName"
+          value={appName}
+          onChange={(e) => setAppName(e.target.value)}
+          placeholder="Enter your app name..."
+        />
+
+        <label htmlFor="category">Category:</label>
+        <input
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Enter your app category..."
+        />
+      <label htmlFor="ideaDescription">Idea Description:</label>
+        <textarea
+          id="ideaDescription"
+          value={ideaDescription}
+          onChange={(e) => setIdeaDescription(e.target.value)}
+          rows={5}
+          placeholder="Enter your app idea description here..."
+        />
         <button type="submit" disabled={isLoading}>
           {isLoading ? 'Analyzing...' : 'Analyze My Idea'}
         </button>
