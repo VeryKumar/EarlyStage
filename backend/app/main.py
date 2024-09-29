@@ -22,7 +22,7 @@ app.add_middleware(
 
 # Initialize Claude client
 claude = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-#test
+
 
 class AppIdea(BaseModel):
     ideaDescription: str
