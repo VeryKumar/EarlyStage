@@ -7,27 +7,44 @@ function IdeaInputPage({ onSubmit }) {
   const [analysis, setAnalysis] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-    console.log(ideaDescription, appName, category)
-    try {
-      const response = await fetch('http://localhost:8000/analyze-idea', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ideaDescription, appName, category }),
-      })
-      const data = await response.json()
-      setAnalysis(data)
-      onSubmit({ ideaDescription, appName, category, analysis: data })
-    } catch (error) {
-      console.error('Error analyzing idea:', error)
-    } finally {
-      setIsLoading(false)
-    }
+  // ... existing imports and component declaration ...
+
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  setIsLoading(true)
+  // try {
+  //   const response = await fetch('http://localhost:8000/analyze-idea', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ ideaDescription, appName, category }),
+  //   })
+  //   const analysisData = await response.json()
+  //   onSubmit({ ideaDescription, appName, category, analysis: analysisData })
+  // } catch (error) {
+  //   console.error('Error analyzing idea:', error)
+  // } finally {
+  //   setIsLoading(false)
+  // }
+  try {
+    const response = await fetch('http://localhost:8000/analyze-idea', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ideaDescription, appName, category }),
+    })
+    const rawText = await response.text()
+    console.log("Raw response from backend:", rawText)
+    const analysisData = JSON.parse(rawText)
+    onSubmit({ ideaDescription, appName, category, analysis: analysisData })
+  } catch (error) {
+    console.error('Error analyzing idea:', error)
+  } finally {
+    setIsLoading(false)
   }
+}
 
   return (
     <div className="idea-input-page">

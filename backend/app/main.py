@@ -1,12 +1,14 @@
 from fastapi import FastAPI, HTTPException, Response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import anthropic
-from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import json
 from typing import Union
 import os
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
@@ -25,7 +27,7 @@ claude = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 
 class AppIdea(BaseModel):
-    ideaDescription: str
+    ideaDescription: str = ""
     appName: str = ""
     category: str = ""
 
@@ -53,7 +55,7 @@ async def analyze_idea(app_idea: AppIdea):
     2. Technical complexity (score 1-10)
     3. Uniqueness (score 1-10)
     4. Overall score (average of above scores)
-    5. Brief analysis (2-3 paragraphs)
+    5. Brief analysis (2-3 paragraphs). List other similar apps and explain how this app stands out (or doesn't).
 
     Format the response as JSON with keys: marketPotential, technicalComplexity, uniqueness, overallScore, analysis
     """
@@ -88,18 +90,32 @@ async def analyze_idea(app_idea: AppIdea):
             # max_tokens_to_sample=1000,
         )
         
-        # Parse Claude's response
-        print('1', response)
-        print('2', response.content[0].text.strip())
+# Parse Claude's response
+        print('1 Response Object:', response)
         analysis_result_text = response.content[0].text.strip()
-        print("Response text:", analysis_result_text)
-        start_index = analysis_result_text.index("{")
-        end_index = analysis_result_text.rindex("}") + 1
-        analysis_result_text = analysis_result_text[start_index:end_index]
-        print("Response text after slicing:", analysis_result_text)
-        analysis_result = AnalysisResult(**json.loads(analysis_result_text))
-        return analysis_result
+        print("2 Response text:", analysis_result_text)
+        
+        # Remove any control characters from the response
+        analysis_result_text = re.sub(r'[\x00-\x1F\x7F-\x9F]', '', analysis_result_text)
+        
+        # Extract JSON from the response
+        json_match = re.search(r'\{.*\}', analysis_result_text, re.DOTALL)
+        if json_match:
+            analysis_result_text = json_match.group(0)
+        else:
+            raise ValueError("No valid JSON found in the response")
+        
+        print("3 Cleaned response text:", analysis_result_text)
+        
+        analysis_result = json.loads(analysis_result_text)
+        print("4 Parsed JSON:", analysis_result)
+        return JSONResponse(content=analysis_result)
+    except json.JSONDecodeError as e:
+        print("JSON Decode Error:", str(e))
+        print("Problematic text:", analysis_result_text)
+        raise HTTPException(status_code=500, detail=f"Invalid JSON: {str(e)}")
     except Exception as e:
+        print("Error:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
 # ... (additional routes and error handling)

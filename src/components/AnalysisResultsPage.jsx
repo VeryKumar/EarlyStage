@@ -1,38 +1,36 @@
 function AnalysisResultsPage({ ideaData }) {
-    // Mock analysis - in a real app, this would come from an API call
-    const mockAnalysis = {
-      summary: "An app for booking last-minute fitness classes",
-      keyFeatures: ["Class search", "Booking system", "User profiles"],
-      category: "Health & Fitness",
-      userBase: "Busy professionals in urban areas",
-    }
+  const { ideaDescription, appName, category, analysis } = ideaData;
   
-    return (
-      <div className="analysis-results-page">
-        <h2>Analysis Results</h2>
-        <div className="result-section">
-          <h3>Summary</h3>
-          <p>{mockAnalysis.summary}</p>
-        </div>
-        <div className="result-section">
-          <h3>Key Features</h3>
-          <ul>
-            {mockAnalysis.keyFeatures.map((feature, index) => (
-              <li key={index}>{feature}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="result-section">
-          <h3>Suggested Category</h3>
-          <p>{mockAnalysis.category}</p>
-        </div>
-        <div className="result-section">
-          <h3>Potential User Base</h3>
-          <p>{mockAnalysis.userBase}</p>
-        </div>
-        <button>Move to Template Selection</button>
+  console.log('Received ideaData:', ideaData);
+  console.log('Analysis object:', analysis);
+
+  return (
+    <div className="analysis-results-page">
+      <h2>Analysis Results for {appName}</h2>
+      <div className="result-section">
+        <h3>App Idea</h3>
+        <p>{ideaDescription}</p>
       </div>
-    )
-  }
-  
-  export default AnalysisResultsPage
+      <div className="result-section">
+        <h3>Category</h3>
+        <p>{category}</p>
+      </div>
+      <div className="result-section">
+        <h3>Analysis Scores</h3>
+        <ul>
+          <li>Market Potential: {analysis?.marketPotential ?? 'N/A'}/10</li>
+          <li>Technical Complexity: {analysis?.technicalComplexity ?? 'N/A'}/10</li>
+          <li>Uniqueness: {analysis?.uniqueness ?? 'N/A'}/10</li>
+          <li>Overall Score: {analysis?.overallScore ?? 'N/A'}/10</li>
+        </ul>
+      </div>
+      <div className="result-section">
+        <h3>Detailed Analysis</h3>
+        <p>{analysis?.analysis ?? 'No detailed analysis available.'}</p>
+      </div>
+      <button>Move to Template Selection</button>
+    </div>
+  );
+}
+
+export default AnalysisResultsPage;
