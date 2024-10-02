@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -52,8 +52,14 @@ def read_root():
 def favicon():
     return Response(status_code=204)
 
+@app.options("/analyze-idea")
+async def options_analyze_idea():
+    print("OPTIONS request received")
+    return Response(status_code=200)
+
 @app.post("/analyze-idea", response_model=AnalysisResult)
-async def analyze_idea(app_idea: AppIdea):
+async def analyze_idea(app_idea: AppIdea, request: Request):
+    print(f"Received request from origin: {request.headers.get('origin')}")
     # Construct prompt for Claude
     
     system_prompt = """You are an AI agent that analyzes app ideas and provides a detailed analysis including:
