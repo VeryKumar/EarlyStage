@@ -16,7 +16,9 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Adjust this to match your frontend URL
+    "http://localhost:5173",  # Local development
+    "https://early-stage.vercel.app",  # Production URL
+    "https://early-stage-git-main-verykumars-projects.vercel.app",  # Preview deployments
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
