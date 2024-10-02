@@ -12,6 +12,12 @@ function IdeaInputPage({ onSubmit }) {
 const handleSubmit = async (e) => {
   e.preventDefault()
   setIsLoading(true)
+
+  console.log("All Vite env variables:", import.meta.env);
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+    
+    // ... rest of your component code ...
+
   // try {
   //   const response = await fetch('http://localhost:8000/analyze-idea', {
   //     method: 'POST',
@@ -28,7 +34,7 @@ const handleSubmit = async (e) => {
   //   setIsLoading(false)
   // }
   try {
-    const response = await fetch('http://localhost:8000/analyze-idea', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/analyze-idea`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
