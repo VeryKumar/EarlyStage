@@ -14,11 +14,15 @@ load_dotenv()
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173",
+    "https://early-stage.vercel.app",
+    "https://early-stage-git-main-verykumars-projects.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    "http://localhost:5173",  # Local development
-    "https://early-stage.vercel.app",  # Production URL
-    "https://early-stage-git-main-verykumars-projects.vercel.app",  # Preview deployments
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
