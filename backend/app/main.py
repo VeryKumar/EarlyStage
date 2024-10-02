@@ -55,7 +55,15 @@ def favicon():
 @app.options("/analyze-idea")
 async def options_analyze_idea():
     print("OPTIONS request received")
-    return Response(status_code=200)
+    return JSONResponse(
+        content={"message": "OK"},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+        },
+    )
+
 
 @app.post("/analyze-idea", response_model=AnalysisResult)
 async def analyze_idea(app_idea: AppIdea, request: Request):
