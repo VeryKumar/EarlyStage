@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './WelcomeScreen.css';
 
 function WelcomeScreen({ onStart }) {
-  const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 50);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
-    <div className={`welcome-screen ${isVisible ? 'visible' : ''}`}>
+    <div className={"welcome-screen"}>
       <h1 className="welcome-title">
         <i className="fas fa-rocket rocket-icon"></i> Welcome to EarlyStage MVP Builder
       </h1>
