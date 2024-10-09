@@ -1,16 +1,16 @@
-import React from 'react';
-import { useSpring, animated } from 'react-spring';
+import React, { useEffect, useState } from 'react';
 import './WelcomeScreen.css';
 
 function WelcomeScreen({ onStart }) {
-  const fadeIn = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-    config: { duration: 1000 },
-  });
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <animated.div style={fadeIn} className="welcome-screen">
+    <div className={`welcome-screen ${isVisible ? 'visible' : ''}`}>
       <h1 className="welcome-title">
         <i className="fas fa-rocket rocket-icon"></i> Welcome to EarlyStage MVP Builder
       </h1>
@@ -18,7 +18,7 @@ function WelcomeScreen({ onStart }) {
       <button onClick={onStart} className="start-button">
         <i className="fas fa-play"></i> Start Your MVP Journey
       </button>
-    </animated.div>
+    </div>
   );
 }
 
