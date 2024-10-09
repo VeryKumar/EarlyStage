@@ -15,24 +15,7 @@ const handleSubmit = async (e) => {
 
   console.log("All Vite env variables:", import.meta.env);
   console.log("API URL:", import.meta.env.VITE_API_URL);
-    
-    // ... rest of your component code ...
-
-  // try {
-  //   const response = await fetch('http://localhost:8000/analyze-idea', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ ideaDescription, appName, category }),
-  //   })
-  //   const analysisData = await response.json()
-  //   onSubmit({ ideaDescription, appName, category, analysis: analysisData })
-  // } catch (error) {
-  //   console.error('Error analyzing idea:', error)
-  // } finally {
-  //   setIsLoading(false)
-  // }
+  
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/analyze-idea`, {
       method: 'POST',
@@ -45,7 +28,22 @@ const handleSubmit = async (e) => {
     const rawText = await response.text()
     console.log("Raw response from backend:", rawText)
     const analysisData = JSON.parse(rawText)
-    onSubmit({ ideaDescription, appName, category, analysis: analysisData })
+    
+    // Add suggested features to the analysis data
+    const suggestedFeatures = analysisData.suggestedFeatures || [
+      "User Authentication",
+      "Data Storage",
+      "Search Functionality",
+      "User Profile Management",
+      "Notifications System"
+    ];
+    
+    onSubmit({ 
+      ideaDescription, 
+      appName, 
+      category, 
+      analysis: { ...analysisData, suggestedFeatures } 
+    })
   } catch (error) {
     console.error('Error analyzing idea:', error)
   } finally {
@@ -57,29 +55,37 @@ const handleSubmit = async (e) => {
     <div className="idea-input-page">
       <h2>Describe Your App Idea</h2>
       <form onSubmit={handleSubmit}>
-      <label htmlFor="appName">App Name:</label>
-        <input
-          id="appName"
-          value={appName}
-          onChange={(e) => setAppName(e.target.value)}
-          placeholder="Enter your app name..."
-        />
+        <div className="input-container">
+          <label htmlFor="appName">App Name:</label>
+          <input
+            id="appName"
+            value={appName}
+            onChange={(e) => setAppName(e.target.value)}
+            placeholder="Enter your app name..."
+          />
+        </div>
 
-        <label htmlFor="category">Category:</label>
-        <input
-          id="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          placeholder="Enter your app category..."
-        />
-      <label htmlFor="ideaDescription">Idea Description:</label>
-        <textarea
-          id="ideaDescription"
-          value={ideaDescription}
-          onChange={(e) => setIdeaDescription(e.target.value)}
-          rows={5}
-          placeholder="Enter your app idea description here..."
-        />
+        <div className="input-container">
+          <label htmlFor="category">Category:</label>
+          <input
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Enter your app category..."
+          />
+        </div>
+
+        <div className="input-container">
+          <label htmlFor="ideaDescription">Idea Description:</label>
+          <textarea
+            id="ideaDescription"
+            value={ideaDescription}
+            onChange={(e) => setIdeaDescription(e.target.value)}
+            rows={5}
+            placeholder="Enter your app idea description here..."
+          />
+        </div>
+
         <button type="submit" disabled={isLoading}>
           {isLoading ? 'Analyzing...' : 'Analyze My Idea'}
         </button>
