@@ -38,12 +38,12 @@ function AnalysisResultsPage({ ideaData, onNext }) {
     <div className="analysis-results-page">
       <h2>Analysis Results for {appName}</h2>
       <div className="result-section">
-        <h3>App Idea</h3>
-        <p>{ideaDescription}</p>
-      </div>
-      <div className="result-section">
         <h3>Category</h3>
         <p>{category}</p>
+      </div>
+      <div className="result-section">
+        <h3>App Description</h3>
+        <p>{ideaDescription}</p>
       </div>
       <div className="result-section">
         <h3>Analysis Scores</h3>
@@ -58,7 +58,7 @@ function AnalysisResultsPage({ ideaData, onNext }) {
         <h3>Detailed Analysis</h3>
         <p>{analysis?.analysis ?? 'No detailed analysis available.'}</p>
       </div>
-      
+
       <div className="result-section">
         <h3>Suggested Core Features</h3>
         <p>Select features to prioritize them for your MVP:</p>
@@ -82,7 +82,7 @@ function AnalysisResultsPage({ ideaData, onNext }) {
           ))}
         </div>
       </div>
-      
+
       <button onClick={handleNext}>Continue to Template Selection</button>
     </div>
   );
