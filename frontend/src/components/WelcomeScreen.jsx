@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './WelcomeScreen.css';
 
 function WelcomeScreen({ onStart }) {
